@@ -5,9 +5,7 @@ xnames = string(xnames);
 xdesc = get(m,'XDescript');
 enames = get(m,'eList'); %- shocks
 eq_num = length(equations);
-% names = string(zeros(eq_num,1));
 source = zeros(eq_num,3);
-% source = cell(eq_num,3);
 
 i = 1;
 for x = 1:eq_num
@@ -21,10 +19,8 @@ for x = 1:eq_num
   for args = split(right, "+")
     disp(length(args));
     for r = 1:length(args)
-      % source{i, 1} = var_index;
       source(i, 1) = var_index;
       current = split(args{r}, '*');
-      % [xnames, source{i, 2}] = find_var_index(xnames, current{end});
       var_name = current{end};
       if contains(var_name, 'ss_') || ismember(var_name, enames) || contains(var_name, '{')
         continue
@@ -35,9 +31,6 @@ for x = 1:eq_num
         for n = 1:(length(current) - 1)
           curr_item = current{n};
           if contains(curr_item, '(1-')
-            % startStr = strfind(curr_item, '-') + 1;
-            % endStr = strfind(curr_item, ')') - 1;
-            % param = extractBetween(curr_item, startStr, endStr);
             curr_item=strrep(curr_item,'(1-','');
             curr_item=strrep(curr_item,')','');
             val = 1;
@@ -45,7 +38,6 @@ for x = 1:eq_num
             for j = 1:length(params)
               val = val - pvalues.(params{j});
             end
-            % expression = expression * (1 - pvalues.(param{1}));
             expression = expression * val;
           elseif isfield(pvalues, curr_item)
             expression = expression * pvalues.(curr_item);
@@ -53,33 +45,19 @@ for x = 1:eq_num
             expression = expression * str2double(curr_item);
           end
         end
-        % source{i, 3} = expression;
         source(i, 3) = expression;
         i = i + 1;
       end
-      % disp(args(r));
     end
   end
 end
 
 headers = {'source', 'target', 'value'};
 links = array2table(source, 'VariableNames', headers);
-% nodes = array2table(transpose(xdesc), 'VariableNames', {'name'});
 nodes = array2table(transpose(xnames), 'VariableNames', {'name'});
 jsonStr = jsonencode(containers.Map({'nodes','links'},{nodes,links}));
-fid = fopen('mpafx7.json', 'w');
+fid = fopen('mpafx6.json', 'w');
 if fid == -1, error('Cannot create JSON file'); end
 fwrite(fid, jsonStr, 'char');
 fclose(fid);
 
-% URL <- paste0("D:/Programming/Modelling/MPAFx/mpafx5.json")
-% QPM <- jsonlite::fromJSON(URL)
-% sankeyNetwork(Links = QPM$links, Nodes = QPM$nodes, Source = "source",
-%              Target = "target", Value = "value", NodeID = "name",
-%              units = "TWh", fontSize = 12, nodeWidth = 30)
-
-
-% library(magrittr)
-
-% sankeyNetwork(QPM) %>%
-% saveNetwork(file = 'Net3.html')
