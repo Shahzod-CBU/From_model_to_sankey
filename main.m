@@ -10,7 +10,6 @@ source = zeros(eq_num,3);
 i = 1;
 for x = 1:eq_num
   equation = split(equations(x), '=');
-  % names(x) = equation(1);
   [xnames, var_index] = find_var_index(xnames, equation(1));
   right = strrep(equation(2), ';', '');
   right = apply_mul(right{1});
