@@ -3,7 +3,7 @@ Prepares MATLAB IRIS model for drawing Sankey Network Diagram.
 For seeing the diagram go to https://rpubs.com/Shahzod1011/649343
 
 ### BEFORE
-![Model equations before appying functions](BEFORE.jpg)
+![Model equations before appying functions](BEFORE2.jpg)
 
 ### AFTER
 ![Diagram after appying functions](Transmission2.jpg)
